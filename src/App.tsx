@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { Octokit } from '@octokit/core'
+import { IoChevronUpOutline, IoChevronDownOutline } from "react-icons/io5";
 
 type SearchUsersResponseType = {
   "login": string,
@@ -83,10 +84,98 @@ type SearchUsersResponseType = {
 }
 
 type UserRepositoriesResponseType = {
-  id: string;
-  title: string;
+  allow_forking: boolean;
+  archive_url: string;
+  archived: boolean;
+  assignees_url: string;
+  blobs_url: string;
+  branches_url: string;
+  clone_url: string;
+  collaborators_url: string;
+  comments_url: string;
+  commits_url: string;
+  compare_url: string;
+  contents_url: string;
+  contributors_url: string;
+  created_at: string;
+  default_branch: string;
+  deployments_url: string;
   description: string;
-  stargazer_count: number;
+  disabled: boolean;
+  downloads_url: string;
+  events_url: string;
+  fork: boolean;
+  forks: number;
+  forks_count: number;
+  forks_url: string;
+  full_name: string;
+  git_commits_url: string;
+  git_refs_url: string;
+  git_tags_url: string;
+  git_url: string;
+  has_discussions: boolean;
+  has_downloads: boolean;
+  has_issues: boolean;
+  has_pages: boolean;
+  has_projects: boolean;
+  has_wiki: boolean;
+  homepage: string;
+  hooks_url: string;
+  html_url: string;
+  id: number;
+  is_template: boolean;
+  issue_comment_url: string;
+  issue_events_url: string;
+  issues_url: string;
+  keys_url: string;
+  labels_url: string;
+  language: string;
+  languages_url: string;
+  license: {
+    key: string;
+    name: string;
+    spdx_id: string;
+    url: string;
+    node_id: string;
+  };
+  merges_url: string;
+  milestones_url: string;
+  mirror_url: string;
+  name: string;
+  node_id: string;
+  notifications_url: string;
+  open_issues: number;
+  open_issues_count: number;
+  owner: {
+    login: string;
+    id: number;
+    node_id: string;
+    avatar_url: string;
+    gravatar_id: string;
+  };
+  permissions: { admin: boolean; maintain: boolean; push: boolean; triage: boolean; pull: boolean; }
+  private: boolean;
+  pulls_url: string;
+  pushed_at: string;
+  releases_url: string;
+  size: number;
+  ssh_url: string;
+  stargazers_count: number;
+  stargazers_url: number;
+  statuses_url: string;
+  subscribers_url: string;
+  subscription_url: string;
+  svn_url: string;
+  tags_url: string;
+  teams_url: string;
+  topics: string[];
+  trees_url: string;
+  updated_at: string;
+  url: string;
+  visibility: string;
+  watchers: number;
+  watchers_count: number;
+  web_commit_signoff_required: boolean;
 }
 
 function App() {
@@ -114,8 +203,8 @@ function App() {
   const getRepos = async (username: string) => {
     try {
       setIsReposLoading(true)
-      const data = await octokit.request(`/users/${username}/repos`);
-      console.log(data);
+      const { data } = await octokit.request(`GET /users/${username}/repos?per_page=5`);
+      setRepos(data)
     } catch (error) {
       console.error(error);
     } finally {
@@ -142,20 +231,38 @@ function App() {
         : !users?.length ? <></> : <div className='card-container'>
           <p>Showing users for "{keyword}"</p>
           {users.map(user => (
-            <div className='user-card' key={user.id} onClick={e => {
-              e.preventDefault()
-              setUsers(prevs => prevs.map((prev => {
-                if (prev.id !== user.id) return prev
-                return {
-                  ...prev,
-                  isOpen: !prev.isOpen
-                }
-              })))
-              if (user.isOpen) return
-              getRepos(user.login)
-            }}>
-              <p>{user.login}</p>
-
+            <div key={user.id}>
+              <div className='user-card' onClick={async (e) => {
+                e.preventDefault()
+                setUsers(prevs => prevs.map((prev => {
+                  if (prev.id !== user.id) return {
+                    ...prev,
+                    isOpen: false
+                  }
+                  return {
+                    ...prev,
+                    isOpen: !prev.isOpen
+                  }
+                })))
+                if (user.isOpen) return
+                await getRepos(user.login)
+              }}>
+                <div className='username-section'>
+                  <p>{user.login}</p>
+                  <div className='icon-container'>
+                    {user.isOpen ? <IoChevronUpOutline /> : <IoChevronDownOutline />}
+                  </div>
+                </div>
+              </div>
+              <div >{!user.isOpen ? <></> : isReposLoading ? 'Loading...' : !repos?.length ? 'No repos found' : repos.map(repo => (
+                <div className='repo-card' key={repo.id}>
+                  <div className='repo-title'>
+                    <p className='title'>{repo.name}</p>
+                    <p className='star'>{repo.stargazers_count}</p>
+                  </div>
+                  <p className='description'>{repo.description || 'No description added'}</p>
+                </div>
+              ))}</div>
             </div>
           ))}
         </div>}
