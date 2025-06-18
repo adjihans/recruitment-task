@@ -5,6 +5,25 @@
   height: 100vh;
 }
 
+.spinner {
+  border: 3px solid #D1D5DB;
+  border-top-color: #1A56DB; /* or any primary color */
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.spinner-username {
+  width: 3rem;
+  height: 3rem;
+  margin-top: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .container {
   margin: 0 auto;
   width: 100%;
@@ -75,6 +94,17 @@
   }
 }
 
+.user-card:hover {
+  background-color: #E5E7EB;
+  color: #111928;
+}
+
+.spinner-repo {
+  margin: 1rem auto 0;
+  height: 5rem;
+  width: 5rem;
+}
+
 .repo-card {
   margin: 1rem 0 0 2rem;  
   border-radius: 8px;
@@ -99,5 +129,13 @@
   
   .star {
     margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
+}
+
+p.text-center {
+  text-align: center;
 }

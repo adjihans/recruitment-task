@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import { Octokit } from '@octokit/core'
 import { IoChevronUpOutline, IoChevronDownOutline } from "react-icons/io5";
+import { IoIosStarOutline } from "react-icons/io";
 
 type SearchUsersResponseType = {
   "login": string,
@@ -227,11 +228,11 @@ function App() {
         <input className='search-input' name='keyword' placeholder='Enter username' type='text' />
         <button className='search-button' type='submit'>Search</button>
       </form>
-      {isLoading ? <p>'Loading...'</p>
-        : !users?.length ? <></> : <div className='card-container'>
+      {isLoading ? <div className="spinner spinner-username" />
+        : !users?.length ? <p className='text-center'>No username found</p> : <div className='card-container'>
           <p>Showing users for "{keyword}"</p>
           {users.map(user => (
-            <div key={user.id}>
+            <div className='user-card-container' key={user.id}>
               <div className='user-card' onClick={async (e) => {
                 e.preventDefault()
                 setUsers(prevs => prevs.map((prev => {
@@ -254,15 +255,16 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div >{!user.isOpen ? <></> : isReposLoading ? 'Loading...' : !repos?.length ? 'No repos found' : repos.map(repo => (
-                <div className='repo-card' key={repo.id}>
-                  <div className='repo-title'>
-                    <p className='title'>{repo.name}</p>
-                    <p className='star'>{repo.stargazers_count}</p>
+              {!user.isOpen ? <></> : isReposLoading ? <div className="spinner spinner-repo" /> : !repos?.length ? <p className='text-center'>No repos found</p>
+                : repos.map(repo => (
+                  <div className='repo-card' key={repo.id}>
+                    <div className='repo-title'>
+                      <p className='title'>{repo.name}</p>
+                      <div className='star'>{repo.stargazers_count}<IoIosStarOutline /></div>
+                    </div>
+                    <p className='description'>{repo.description || 'No description added'}</p>
                   </div>
-                  <p className='description'>{repo.description || 'No description added'}</p>
-                </div>
-              ))}</div>
+                ))}
             </div>
           ))}
         </div>}
