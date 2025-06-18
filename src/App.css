@@ -44,3 +44,23 @@
   color: white;
   margin-top: 8px;
 }
+
+.card-container {
+  width: 100%;
+}
+
+.user-card {
+  border-radius: 8px;
+  background-color: white;
+  padding: 8px 4px;
+  border: 1px solid #E5E7EB;
+  width: 100%;
+
+  cursor: pointer;
+
+  display: grid;
+  grid-template-areas: 
+   "title title start"
+   "description description description"
+  ;
+}

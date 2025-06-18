@@ -82,30 +82,46 @@ type SearchUsersResponseType = {
   "user_view_type": string
 }
 
+type UserRepositoriesResponseType = {
+  id: string;
+  title: string;
+  description: string;
+  stargazer_count: number;
+}
+
 function App() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [keyword, setKeyword] = useState('')
-  const [users, setUsers] = useState<SearchUsersResponseType[]>([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [isReposLoading, setIsReposLoading] = useState(false);
+  const [keyword, setKeyword] = useState('');
+  const [users, setUsers] = useState<Array<SearchUsersResponseType & { isOpen: boolean }>>([]);
+  const [repos, setRepos] = useState<UserRepositoriesResponseType[]>([])
   const octokit = new Octokit({
     auth: import.meta.env.VITE_FINE_GRAINED_PA_ACCESS_TOKEN
-  })
+  });
 
   const getUser = async (search: string) => {
     try {
-      setIsLoading(true)
-      const { data: { items } } = await octokit.request(`GET /search/users?q=${search}&per_page=5`, {
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      })
-      setUsers(items)
+      setIsLoading(true);
+      const { data: { items } } = await octokit.request(`GET /search/users?q=${search}&per_page=5`);
+      setUsers(items);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
+  const getRepos = async (username: string) => {
+    try {
+      setIsReposLoading(true)
+      const data = await octokit.request(`/users/${username}/repos`);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsReposLoading(false)
+    }
+  }
 
   return (
     <div className='container'>
@@ -123,10 +139,24 @@ function App() {
         <button className='search-button' type='submit'>Search</button>
       </form>
       {isLoading ? <p>'Loading...'</p>
-        : !users?.length ? <></> : <div>
+        : !users?.length ? <></> : <div className='card-container'>
           <p>Showing users for "{keyword}"</p>
           {users.map(user => (
-            <div key={user.id}>{user.login}</div>
+            <div className='user-card' key={user.id} onClick={e => {
+              e.preventDefault()
+              setUsers(prevs => prevs.map((prev => {
+                if (prev.id !== user.id) return prev
+                return {
+                  ...prev,
+                  isOpen: !prev.isOpen
+                }
+              })))
+              if (user.isOpen) return
+              getRepos(user.login)
+            }}>
+              <p>{user.login}</p>
+
+            </div>
           ))}
         </div>}
     </div>
