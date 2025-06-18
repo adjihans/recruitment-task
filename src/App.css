@@ -28,17 +28,19 @@
 
 .search-input {
   padding: 16px 8px;
-  background-color: gray;
-  color: black;
-  border: none;
+  background-color: #F9FAFB;
+  color: #111928;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
 }
 
 .search-input::placeholder {
-  color: white
+  color: #6B7280
 }
 
 .search-button {
-  background-color: aqua;
+  border-radius: 8px;
+  background-color: #1A56DB;
   color: white;
   margin-top: 8px;
 }

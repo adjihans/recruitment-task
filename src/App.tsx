@@ -84,7 +84,7 @@ type SearchUsersResponseType = {
 
 function App() {
   const [isLoading, setIsLoading] = useState(false)
-  const [search, setSearch] = useState('')
+  const [keyword, setKeyword] = useState('')
   const [users, setUsers] = useState<SearchUsersResponseType[]>([])
   const octokit = new Octokit({
     auth: import.meta.env.VITE_FINE_GRAINED_PA_ACCESS_TOKEN
@@ -107,29 +107,30 @@ function App() {
   }
 
 
-  return <div className='container'>
-    <form className='search-form' onSubmit={(e) => {
-      e.preventDefault()
-      getUser(search)
-    }
-    }>
-      <input className='search-input' onChange={(event) => {
-        const value = event.target.value
-        setSearch(value)
-      }}
-        value={search}
-        placeholder='Enter username'
-      />
-      <button className='search-button' type='submit'>Search</button>
-    </form>
-    {isLoading ? <p>'Loading...'</p>
-      : <div>
-        <p>Showing users for "{search}"</p>
-        {users.map(user => (
-          <div key={user.id}>{user.login}</div>
-        ))}
-      </div>}
-  </div>
+  return (
+    <div className='container'>
+      <form
+        className='search-form'
+        onSubmit={(e) => {
+          e.preventDefault()
+          const formData = new FormData(e?.currentTarget)
+          const value = formData.get('keyword') as string
+          setKeyword(value)
+          getUser(value)
+        }}
+      >
+        <input className='search-input' name='keyword' placeholder='Enter username' type='text' />
+        <button className='search-button' type='submit'>Search</button>
+      </form>
+      {isLoading ? <p>'Loading...'</p>
+        : !users?.length ? <></> : <div>
+          <p>Showing users for "{keyword}"</p>
+          {users.map(user => (
+            <div key={user.id}>{user.login}</div>
+          ))}
+        </div>}
+    </div>
+  )
 }
 
 export default App
