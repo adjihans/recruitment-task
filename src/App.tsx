@@ -185,9 +185,7 @@ function App() {
   const [keyword, setKeyword] = useState('');
   const [users, setUsers] = useState<Array<SearchUsersResponseType & { isOpen: boolean }> | null>(null);
   const [repos, setRepos] = useState<UserRepositoriesResponseType[]>([])
-  const octokit = new Octokit({
-    auth: import.meta.env.VITE_FINE_GRAINED_PA_ACCESS_TOKEN
-  });
+  const octokit = new Octokit();
 
   const getUser = async (search: string) => {
     try {
