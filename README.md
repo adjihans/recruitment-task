@@ -23,7 +23,8 @@ Please follow these steps in order to run the apps locally:
 This apps deploy using gh-pages into Github Pages. Therefore, in order to deploy it you need to:
 
 1. Build the production ready build by running `pnpm run build`
-2. Deploy the build by running `pnpm run deploy`
+2. Run `pnpm run prepare:deploy`
+3. Deploy the build by running `pnpm run deploy`
 
 If you ever meet an error while deploying a build and the errors messages:
 
