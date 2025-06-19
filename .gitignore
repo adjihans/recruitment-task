@@ -1,0 +1,27 @@
+# Node.js and pnpm
+node_modules/
+.pnpm-store/
+.pnpm/
+dist/
+build/
+coverage/
+.env
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.parcel-cache/
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
