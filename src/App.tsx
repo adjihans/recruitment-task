@@ -183,7 +183,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isReposLoading, setIsReposLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
-  const [users, setUsers] = useState<Array<SearchUsersResponseType & { isOpen: boolean }>>([]);
+  const [users, setUsers] = useState<Array<SearchUsersResponseType & { isOpen: boolean }> | null>(null);
   const [repos, setRepos] = useState<UserRepositoriesResponseType[]>([])
   const octokit = new Octokit({
     auth: import.meta.env.VITE_FINE_GRAINED_PA_ACCESS_TOKEN
@@ -228,14 +228,14 @@ function App() {
         <input className='search-input' name='keyword' placeholder='Enter username' type='text' />
         <button className='search-button' type='submit'>Search</button>
       </form>
-      {isLoading ? <div className="spinner spinner-username" />
+      {users === null ? <></> : isLoading ? <div className="spinner spinner-username" />
         : !users?.length ? <p className='text-center'>No username found</p> : <div className='card-container'>
           <p>Showing users for "{keyword}"</p>
           {users.map(user => (
             <div className='user-card-container' key={user.id}>
               <div className='user-card' onClick={async (e) => {
                 e.preventDefault()
-                setUsers(prevs => prevs.map((prev => {
+                setUsers(prevs => prevs === null ? [] : prevs.map((prev => {
                   if (prev.id !== user.id) return {
                     ...prev,
                     isOpen: false
