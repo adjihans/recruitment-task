@@ -1,54 +1,34 @@
-# React + TypeScript + Vite
+# Recruitment Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Lib Versioning
 
-Currently, two official plugins are available:
+This apps currently using:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node version 18.20.8
+- React version 19.1.0
 
-## Expanding the ESLint configuration
+## How to run
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Please follow these steps in order to run the apps locally:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Make sure Node version that currently used is version 18.20.\*
+2. This apps using pnpm, therefore if pnpm it's not installed please install the pnpm using command below
+   `npm install -g pnpm`
+3. Install all of the dependencies by running `pnpm install`
+4. Running the apps locally by running `pnpm run dev`
+5. Input the address that shown in your terminal. For example: http://localhost:5173/
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## How to deploy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This apps deploy using gh-pages into Github Pages. Therefore, in order to deploy it you need to:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+1. Build the production ready build by running `pnpm run build`
+2. Deploy the build by running `pnpm run deploy`
+
+If you ever meet an error while deploying a build and the errors messages:
+
+1. `Push cannot contain secrets` <--- it means that you need to remove some secret value on your build
+2. `fatal: a branch named 'gh-pages' already exists` it can be multiple things but the most common is that because your previous deployment is error. Since gh-pages does not automatically revert a deployment process if an error arise, therefore you need to clear the `gh-pages already exist` by:
+   - `rm -rf node_modules/.cache/gh-pages`
+   - `git branch -D gh-pages 2>/dev/null`
+   - `pnpm run deploy`
