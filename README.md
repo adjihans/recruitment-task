@@ -7,6 +7,8 @@ This apps currently using:
 - Node version 18.20.8
 - React version 19.1.0
 
+For the deployed version, please access https://adjihans.github.io/recruitment-task/
+
 ## How to run
 
 Please follow these steps in order to run the apps locally:
